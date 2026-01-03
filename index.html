@@ -2,229 +2,96 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAMES WARS | Central de Comando</title>
+    <title>SISTEMA OPERACIONAL 2026 - HUB DE JOGOS</title>
     <style>
-        :root {
-            --primary: #00f2ff;
-            --bg-dark: #020202;
-            --bg-card: #0d1117;
-            --text: #ffffff;
-            --accent: #ff00ea;
-        }
+        :root { --main: #00f2ff; --bg: #050505; --card: #111; --neon: #0f0; }
+        body { background: var(--bg); color: white; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        
+        /* HEADER DO SISTEMA */
+        nav { border-bottom: 2px solid var(--main); padding: 15px 25px; display: flex; justify-content: space-between; background: #000; align-items: center; }
+        .status { color: var(--neon); font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text);
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
+        /* GRID DE SELEÇÃO */
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 40px; max-width: 1200px; margin: auto; }
+        
+        .game-card { background: var(--card); border: 2px solid #222; border-radius: 12px; padding: 25px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
+        .game-card:hover { border-color: var(--main); box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); transform: translateY(-5px); }
+        .game-card h3 { margin: 15px 0 5px 0; font-size: 20px; letter-spacing: 1px; }
+        .game-card span { font-size: 11px; color: #555; text-transform: uppercase; }
+        .icon { font-size: 50px; }
 
-        /* BARRA DE NAVEGAÇÃO */
-        nav {
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 2px solid var(--primary);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
-            text-decoration: none;
-        }
-
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--primary); }
-
-        /* DESTAQUE (HERO SECTION) */
-        .hero {
-            height: 350px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5), var(--bg-dark)), 
-                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=2070');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .hero h1 { font-size: 48px; margin: 0; text-transform: uppercase; letter-spacing: 5px; }
-        .hero p { color: var(--primary); font-size: 18px; margin-top: 10px; }
-
-        /* CONTAINER DE JOGOS */
-        .container { padding: 40px 5%; }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid var(--accent);
-            padding-left: 15px;
-            margin-bottom: 30px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-        }
-
-        /* CARD VAZIO / ESPERANDO JOGO */
-        .game-card {
-            background: var(--bg-card);
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid #222;
-            transition: 0.4s;
-            cursor: pointer;
-            position: relative;
-            min-height: 250px;
-        }
-
-        .game-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.3);
-        }
-
-        .placeholder-img {
-            height: 180px;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-            font-weight: bold;
-            font-size: 40px;
-        }
-
-        .game-card-info { padding: 15px; }
-        .game-card-info h3 { margin: 0 0 10px; font-size: 18px; color: #555; }
-        .category-tag {
-            font-size: 10px;
-            background: #222;
-            color: #555;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* MODAL */
-        .game-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-        }
-
-        .modal-content {
-            width: 90%; height: 85%;
-            margin: 2% auto;
-            background: #000;
-            position: relative;
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -40px; right: 0;
-            color: white; font-size: 30px;
-            cursor: pointer;
-            background: none; border: none;
-        }
-
-        iframe { width: 100%; height: 100%; border: none; border-radius: 10px; }
-
-        footer {
-            padding: 50px;
-            text-align: center;
-            border-top: 1px solid #222;
-            color: #444;
-            font-size: 14px;
-        }
+        /* VIEWPORT DE EXECUÇÃO (BLINDADA) */
+        #SISTEMA_VIEWPORT { display: none; position: fixed; inset: 0; background: #000; z-index: 99999; }
+        #SISTEMA_CONTAINER { width: 100%; height: 100%; border: none; }
+        .BTN-CLOSE { position: absolute; top: 20px; right: 20px; background: #ff0055; color: white; border: none; padding: 12px 25px; cursor: pointer; z-index: 100000; font-weight: bold; border-radius: 5px; box-shadow: 0 0 15px rgba(255, 0, 85, 0.5); }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#" class="logo">GAMES WARS</a>
-        <div class="nav-links">
-            <a href="#">INÍCIO</a>
-            <a href="#">BIBLIOTECA</a>
-            <a href="#">SOBRE</a>
-        </div>
+        <div style="font-weight: 900; letter-spacing: 3px; font-size: 20px; color: var(--main);">CORE_OS // 2026</div>
+        <div class="status">SISTEMA_INTEGRO: ESTÁVEL</div>
     </nav>
 
-    <section class="hero">
-        <h1>GAMES WARS</h1>
-        <p>Aguardando Inserção de Novas Missões...</p>
-    </section>
-
     <div class="container">
-        
-        <div class="section-header">
-            <h2>MEU ARSENAL DE JOGOS</h2>
+        <div class="game-card" onclick="BOOT_GAME('A7_HYPER_BOT')">
+            <div class="icon">⚡</div>
+            <h3>HYPER_BOT EVASION</h3>
+            <span>MODO: ULTRA_INSTINCT</span>
         </div>
 
-        <div class="grid">
-            
-            <div class="game-card" onclick="alert('Copia este bloco no código para adicionar um novo jogo!')">
-                <div class="placeholder-img">+</div>
-                <div class="game-card-info">
-                    <span class="category-tag">Status: Disponível</span>
-                    <h3>Adicionar Novo Jogo</h3>
-                </div>
-            </div>
-
+        <div class="game-card" onclick="BOOT_GAME('B2_NEON_STACK')">
+            <div class="icon">🧱</div>
+            <h3>NEON STACK 3D</h3>
+            <span>MODO: OVERDRIVE</span>
         </div>
-    </div>
 
-    <div id="gameModal" class="game-modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeGame()">✕ FECHAR</button>
-            <iframe id="gameFrame" src=""></iframe>
+        <div class="game-card" style="opacity: 0.3; cursor: default; border-style: dashed;">
+            <div class="icon">🔒</div>
+            <h3>VAGO</h3>
+            <span>AGUARDANDO_DADOS</span>
         </div>
     </div>
 
-    <footer>
-        <p>© 2026 <strong style="color:var(--primary)">GAMES WARS</strong>. Todos os direitos reservados.</p>
-        <p>Portal Privado - Desenvolvido por Games Wars Project.</p>
-    </footer>
+    <div id="SISTEMA_VIEWPORT">
+        <button class="BTN-CLOSE" onclick="SHUTDOWN()">✕ ENCERRAR</button>
+        <div id="SISTEMA_CONTAINER"></div>
+    </div>
 
     <script>
-        function openGame(url) {
-            document.getElementById('gameFrame').src = url;
-            document.getElementById('gameModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
+        /* --- BANCO DE DADOS PROTEGIDO --- */
+        const SISTEMA_DE_ARQUIVOS = {
+            "A7_HYPER_BOT": `
+                <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><style>body { margin: 0; overflow: hidden; background: #000; touch-action: none; font-family: sans-serif; } #ui-top { position: absolute; top: 10px; width: 100%; text-align: center; color: #00f2ff; z-index: 100; pointer-events: none; } #score-box { font-size: 32px; font-weight: 900; } .overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center; } #J_BASE { position: absolute; bottom: 40px; left: 40px; width: 100px; height: 100px; background: rgba(255,255,255,0.05); border: 2px solid #00f2ff; border-radius: 50%; z-index: 1000; } #J_STICK { position: absolute; top: 25px; left: 25px; width: 50px; height: 50px; background: #00f2ff; border-radius: 50%; } #B_THROW { position: absolute; bottom: 40px; right: 40px; width: 100px; height: 100px; background: #ff0055; border: 4px solid #fff; border-radius: 50%; color: white; font-weight: bold; z-index: 1000; display: flex; align-items: center; justify-content: center; }</style></head><body><div id="win-screen" class="overlay" style="color:#0f0"><h1>NA MOSCA!</h1><button onclick="RESET_GAME()" style="padding:15px 30px; background:#0f0; border:none; font-weight:bold;">PRÓXIMO</button></div><div id="lose-screen" class="overlay" style="color:#f05"><h1>PERDEU!</h1><button onclick="STOP_DRAIN_AND_RESET()" style="padding:15px 30px; background:#f05; color:#fff; border:none; font-weight:bold;">RECARREGAR</button></div><div id="ui-top"><div id="score-box">PONTOS: <span id="pts">0</span></div></div><div id="J_BASE"><div id="J_STICK"></div></div><div id="B_THROW">LANÇAR!</div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><script>let ballState, gameActive, mv = { x: 0, z: 0 }, bVel = new THREE.Vector3(); let score = 0, drainInterval = null, botTick = 0; const s = new THREE.Scene(), c = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000); const r = new THREE.WebGLRenderer({antialias: true}); r.setSize(window.innerWidth, window.innerHeight); document.body.appendChild(r.domElement); const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 120), new THREE.MeshBasicMaterial({color: 0x080808})); floor.rotation.x = -Math.PI/2; s.add(floor); const grid = new THREE.GridHelper(120, 12, 0x333333, 0x222222); s.add(grid); const p = new THREE.Mesh(new THREE.BoxGeometry(6, 9, 6), new THREE.MeshBasicMaterial({ color: 0x00ff00 })); const e = new THREE.Mesh(new THREE.BoxGeometry(6, 9, 6), new THREE.MeshBasicMaterial({ color: 0xff00ff })); const b = new THREE.Mesh(new THREE.SphereGeometry(2.5), new THREE.MeshBasicMaterial({ color: 0xffff00 })); s.add(p); s.add(e); s.add(b); s.add(new THREE.AmbientLight(0xffffff, 2)); function RESET_GAME() { gameActive = true; ballState = "POSSE_P"; p.position.set(0, 4.5, 40); e.position.set(0, 4.5, -45); b.position.set(0, 6, 33); bVel.set(0,0,0); document.getElementById('win-screen').style.display = 'none'; document.getElementById('lose-screen').style.display = 'none'; clearInterval(drainInterval); } function STOP_DRAIN_AND_RESET() { clearInterval(drainInterval); RESET_GAME(); } RESET_GAME(); const base = document.getElementById('J_BASE'), stick = document.getElementById('J_STICK'); base.addEventListener('touchmove', (ev) => { if(!gameActive) return; const t = ev.touches[0], rect = base.getBoundingClientRect(); let dx = t.clientX - (rect.left + 50), dy = t.clientY - (rect.top + 50); const dist = Math.min(Math.sqrt(dx*dx + dy*dy), 40), ang = Math.atan2(dy, dx); stick.style.transform = "translate("+(Math.cos(ang)*dist)+"px,"+(Math.sin(ang)*dist)+"px)"; mv.x = (Math.cos(ang)*dist)/7.5; mv.z = (Math.sin(ang)*dist)/7.5; }); base.addEventListener('touchend', () => { stick.style.transform = "translate(0,0)"; mv = {x:0, z:0}; }); document.getElementById('B_THROW').addEventListener('touchstart', (ev) => { ev.preventDefault(); if(ballState === "POSSE_P" && gameActive) { ballState = "VOO_P"; bVel.set((e.position.x - p.position.x)*0.25, 0, -18); } }); function loop() { requestAnimationFrame(loop); if(!gameActive) return; botTick += 0.05; p.position.x = Math.max(-36, Math.min(36, p.position.x + mv.x)); p.position.z = Math.max(5, Math.min(55, p.position.z + mv.z)); if(ballState === "POSSE_P") { e.position.x += Math.sin(botTick * 4) * 2.2; e.position.z = -45 + Math.cos(botTick * 2) * 12; } else if(ballState === "VOO_P") { let diffX = b.position.x - e.position.x; if (Math.abs(diffX) < 15) { e.position.x += diffX > 0 ? -1.8 : 1.8; } e.position.z -= 0.5; } else if(ballState === "SOLTA") { if(b.position.z < 15) { e.position.x += (b.position.x - e.position.x) * 0.5; e.position.z += (b.position.z - e.position.z) * 0.5; if(e.position.distanceTo(b.position) < 16) ballState = "POSSE_B"; } } else if(ballState === "POSSE_B") { b.position.set(e.position.x, 6, e.position.z + 7); e.position.z += (-10 - e.position.z) * 0.15; e.position.x += (p.position.x - e.position.x) * 0.2; if(Math.random() < 0.1) { ballState = "VOO_B"; bVel.set((p.position.x - e.position.x)*0.25, 0, 18); } } e.position.x = Math.max(-36, Math.min(36, e.position.x)); e.position.z = Math.max(-55, Math.min(-5, e.position.z)); if(ballState.includes("VOO")) { b.position.add(bVel); if(Math.abs(b.position.x) > 38) bVel.x *= -1; if(b.position.z > 57) { b.position.z = 57; ballState = "SOLTA"; bVel.set(0,0,0); } if(b.position.z < -57) { b.position.z = -57; ballState = "SOLTA"; bVel.set(0,0,0); } } if(ballState === "VOO_P" && b.position.distanceTo(e.position) < 8) { gameActive = false; score += 1; document.getElementById('pts').innerText = score; document.getElementById('win-screen').style.display = 'flex'; } if(ballState === "VOO_B" && b.position.distanceTo(p.position) < 8) { gameActive = false; document.getElementById('lose-screen').style.display = 'flex'; drainInterval = setInterval(() => { if(score > 0) { score -= 1; document.getElementById('pts').innerText = score; } else { clearInterval(drainInterval); } }, 500); } if(ballState === "SOLTA" && p.position.distanceTo(b.position) < 16) ballState = "POSSE_P"; if(ballState === "POSSE_P") b.position.set(p.position.x, 6, p.position.z - 7); c.position.set(0, 110, 130); c.lookAt(0,0,0); r.render(s, c); } loop(); window.RESET_GAME = RESET_GAME; window.STOP_DRAIN_AND_RESET = STOP_DRAIN_AND_RESET;<\/script></body></html>
+            `,
+            "B2_NEON_STACK": `
+                <!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body { margin: 0; overflow: hidden; background-color: #050508; font-family: sans-serif; user-select: none; } #ui { position: absolute; top: 50px; width: 100%; text-align: center; color: #ffffff; pointer-events: none; z-index: 10; } #score { font-size: 80px; font-weight: 900; margin: 0; text-shadow: 0 0 20px #0ff; } .label { font-size: 14px; letter-spacing: 5px; text-transform: uppercase; opacity: 0.6; } #instructions { position: absolute; bottom: 30px; width: 100%; text-align: center; color: white; font-size: 12px; letter-spacing: 2px; opacity: 0.4; }</style></head><body><div id="ui"><div class="label">Altitude</div><h1 id="score">0</h1></div><div id="instructions">CLIQUE PARA EMPILHAR</div><script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }<\/script><script type="module">import * as THREE from 'three'; const scene = new THREE.Scene(); const aspect = window.innerWidth / window.innerHeight; const d = 20; const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, -100, 1000); camera.position.set(20, 20, 20); camera.lookAt(0, 0, 0); const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); document.body.appendChild(renderer.domElement); scene.add(new THREE.AmbientLight(0xffffff, 0.4)); const mainLight = new THREE.DirectionalLight(0xffffff, 1.2); mainLight.position.set(10, 20, 15); scene.add(mainLight); let stack = []; let gameActive = true; let speed = 0.3; let direction = 'x'; let moveDir = 1; function createBox(x, y, z, w, d, color) { const geometry = new THREE.BoxGeometry(w, 1, d); const material = new THREE.MeshPhongMaterial({ color, emissive: color, emissiveIntensity: 0.2 }); const mesh = new THREE.Mesh(geometry, material); mesh.position.set(x, y, z); scene.add(mesh); return { mesh, w, d }; } const base = createBox(0, 0, 0, 12, 12, 0x00f3ff); stack.push(base); function spawn() { const prev = stack[stack.length - 1]; const hue = (stack.length * 15) % 360; const color = new THREE.Color(\`hsl(\${hue}, 80%, 55%)\`); direction = direction === 'x' ? 'z' : 'x'; const x = direction === 'x' ? -20 : prev.mesh.position.x; const z = direction === 'z' ? -20 : prev.mesh.position.z; stack.push(createBox(x, stack.length, z, prev.w, prev.d, color)); } spawn(); function animate() { if (gameActive) { const current = stack[stack.length - 1]; if (direction === 'x') { current.mesh.position.x += speed * moveDir; if (Math.abs(current.mesh.position.x) > 20) moveDir *= -1; } else { current.mesh.position.z += speed * moveDir; if (Math.abs(current.mesh.position.z) > 20) moveDir *= -1; } camera.position.y = THREE.MathUtils.lerp(camera.position.y, stack.length + 15, 0.08); camera.lookAt(0, stack.length - 2, 0); } renderer.render(scene, camera); requestAnimationFrame(animate); } window.onmousedown = () => { if (!gameActive) { location.reload(); return; } const current = stack[stack.length - 1]; const prev = stack[stack.length - 2]; const delta = direction === 'x' ? current.mesh.position.x - prev.mesh.position.x : current.mesh.position.z - prev.mesh.position.z; const size = direction === 'x' ? current.w : current.d; const overlap = size - Math.abs(delta); if (overlap <= 0) { gameActive = false; document.getElementById('score').style.color = '#f05'; } else { if (direction === 'x') { current.mesh.scale.x = overlap / current.w; current.mesh.position.x -= delta / 2; current.w = overlap; } else { current.mesh.scale.z = overlap / current.d; current.mesh.position.z -= delta / 2; current.d = overlap; } document.getElementById('score').innerText = stack.length - 1; speed += 0.01; spawn(); } }; animate();<\/script></body></html>
+            `
+        };
+
+        /* --- MOTOR DE EXECUÇÃO --- */
+        function BOOT_GAME(id) {
+            const viewport = document.getElementById('SISTEMA_VIEWPORT');
+            const container = document.getElementById('SISTEMA_CONTAINER');
+            viewport.style.display = 'block';
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.border = "none";
+            
+            container.innerHTML = "";
+            container.appendChild(iframe);
+            
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(SISTEMA_DE_ARQUIVOS[id]);
+            doc.close();
         }
 
-        function closeGame() {
-            document.getElementById('gameFrame').src = '';
-            document.getElementById('gameModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
+        function SHUTDOWN() {
+            document.getElementById('SISTEMA_VIEWPORT').style.display = 'none';
+            document.getElementById('SISTEMA_CONTAINER').innerHTML = '';
         }
     </script>
 </body>
